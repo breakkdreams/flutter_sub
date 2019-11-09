@@ -235,15 +235,26 @@ class _LoginPageState extends State<LoginPage> {
       'password':_password_controller.text,
     };
 
-    await request('loginPageContent', formData: formData).then((mm){
-      print(mm);
-    });
-    
-//    request('loginPageContent', formData: formData).then((msg) {
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('loginPageContent', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+          delock(data['data']).then((unlock_data){
+            data['data'] = json.decode(unlock_data.toString());
+            print('============');
+            print(data);
+            print('============');
+          });
+        });
+      });
+    }
+
+
+//    await request('loginPageContent', formData: formData).then((val) {
+//      var data = val;
 //
-//      print('============');
-//      print(msg);
-//      print('============');
 ////      toast(data['message']);
 ////      if (data['code'] == 200) {
 ////        prefs.setString('userId', data['data']['uid']);
