@@ -10,6 +10,7 @@ import 'package:flutter_sub/provide/login_provide.dart';
 import 'package:flutter_sub/routers/application.dart';
 import 'package:flutter_sub/routers/routes.dart';
 import 'package:flutter_sub/service/data_service.dart';
+import 'package:flutter_sub/utils/secret.dart';
 import 'package:flutter_sub/utils/toast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provide/provide.dart';
@@ -91,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
       _getaccessToken();
     }
     ///加密开关(1是开 0是关)
-    prefs.setString('secret_open', '0');
+    prefs.setString('secret_open', '1');
 
     var userid = prefs.getString('userId');
     if(userid !=null && userid.isNotEmpty){
@@ -227,21 +228,29 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
   ///登录
-  void _login_sure(){
+  void _login_sure() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     var formData = {
       'account': _mobile_controller.text,
       'password':_password_controller.text,
     };
-    request('loginPageContent', formData: formData).then((val) async {
-      var data = json.decode(val.toString());
-      toast(data['message']);
-      if (data['code'] == 200) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('userId', data['data']['uid']);
-        Provide.value<LoginProvide>(context).setUserId(data['data']['uid']);
-        Application.router.navigateTo(context,Routes.homePage,clearStack: true,);
-      }
+
+    await request('loginPageContent', formData: formData).then((mm){
+      print(mm);
     });
+    
+//    request('loginPageContent', formData: formData).then((msg) {
+//
+//      print('============');
+//      print(msg);
+//      print('============');
+////      toast(data['message']);
+////      if (data['code'] == 200) {
+////        prefs.setString('userId', data['data']['uid']);
+////        Provide.value<LoginProvide>(context).setUserId(data['data']['uid']);
+////        Application.router.navigateTo(context,Routes.homePage,clearStack: true,);
+////      }
+//    });
   }
 
 

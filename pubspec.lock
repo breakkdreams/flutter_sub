@@ -347,6 +347,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  rsa_plugin:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: a8470449f44a8ba851dd90ad8849386d0fdb3008
+      url: "git://github.com/breakkdreams/rsa_plugin"
+    source: git
+    version: "0.0.1"
   shared_preferences:
     dependency: "direct main"
     description:
