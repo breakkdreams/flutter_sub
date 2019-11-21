@@ -32,6 +32,8 @@ class _PersonalPageState extends State<PersonalPage>
   @override
   void initState() {
     _init();
+
+
     super.initState();
   }
 
@@ -43,37 +45,75 @@ class _PersonalPageState extends State<PersonalPage>
     ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
-    request('userInfoPageContent', formData: formData).then((val) {
-      var data = json.decode(val.toString());
-      if (data['code'] == 200) {
-        setState(() {
-          userInfo = data['data'];
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('userInfoPageContent', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+
+          delock(data['data']).then((unlock_data){
+            data['data'] = json.decode(unlock_data.toString());
+            setState(() {
+              userInfo = data['data'];
+            });
+            _init2();
+          });
+
         });
+      });
+    }
+  }
+
+  void _init2() async {
+    setState(() {
+      _showLoading = true;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    ///参数
+    var userid = prefs.getString('userId').toString();
+    var formData = {"uid": userid};
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
         request('grPageContent', formData: formData).then((val) {
           var data = json.decode(val.toString());
-          if (data['code'] == 200) {
+          delock(data['data']).then((unlock_data){
+            data['data'] = json.decode(unlock_data.toString());
             setState(() {
               grInfo = data['data'];
             });
-            request('myToolsPageContent', formData: formData).then((val) {
-              var data = json.decode(val.toString());
-              if (data['code'] == 200) {
-                setState(() {
-                  toolsList = data['data'];
-                  _showLoading = false;
-                });
-              }
-            });
-          }
+            _init3();
+          });
+
         });
-      }else if(data['code'] == -4){
-        prefs.remove("userId");
-        Application.router.navigateTo(context, Routes.loginPage,clearStack: true);
-        toast(data['message']);
-      }else{
-        toast(data['message']);
-      }
+      });
+    }
+  }
+
+  void _init3() async {
+    setState(() {
+      _showLoading = true;
     });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    ///参数
+    var userid = prefs.getString('userId').toString();
+    var formData = {"uid": userid};
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('myToolsPageContent', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+          setState(() {
+            toolsList = data['data'];
+            _showLoading = false;
+          });
+
+        });
+      });
+    }
   }
 
   @override

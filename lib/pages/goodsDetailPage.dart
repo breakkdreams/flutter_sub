@@ -56,6 +56,56 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
       _showLoading = true;
     });
     _init();
+    addfooter();
+    goodsSpec();
+  }
+
+  goodsSpec() async {
+    ///获取商品配置
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userId').toString();
+    var formData = {"id":goodsId};
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('goods_spec_api', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+
+          delock(data['data']).then((unlock_data){
+            data['data'] = json.decode(unlock_data.toString());
+            skuData = data['data']['skuData'];
+            attrList = skuData['sku']['tree'];
+            if(attrList!=null && attrList.length>0){
+              for(var items in attrList){
+                items['checkVal'] = 0;
+                setState(() {
+                  attrList = attrList;
+                });
+              }
+            }
+          });
+        });
+      });
+    }
+  }
+
+  addfooter() async {
+    ///添加足迹
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userId').toString();
+    var formData = {"uid": userid,"goods_id":goodsId,"type":1};
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('footprint_api', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+
+        });
+      });
+    }
   }
 
   _init() async {
@@ -63,49 +113,37 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
     ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid,"id":goodsId};
-    request('goods_info_api', formData: formData).then((val) {
-      var data = json.decode(val.toString());
-      if (data['code'] == 200) {
-        setState(() {
-          _showLoading = false;
-          ///是否收藏
-          if(data['data']['issc'] == 1){
-            is_collection = true;
-          }else{
-            is_collection = false;
-          }
-          ///轮播图
-          swiperList = data['data']['goodsalbum'];
-          ///商品详情
-          goodsInfo = data['data'];
-          ///商品详情图
-          goods_detail_list = data['data']['goodsinfo'];
-        });
-      }else{
-        toast(data['message']);
-      }
-    });
-    ///添加足迹
-    var footFormData = {"uid": userid,"goods_id":goodsId,"type":1};
-    request('footprint_api', formData: footFormData).then((val) {
-      var data = json.decode(val.toString());
-    });
-    ///获取商品配置
-    var specFormData = {"id":goodsId};
-    request('goods_spec_api', formData: specFormData).then((val) {
-      var data = json.decode(val.toString());
-      skuData = data['data']['skuData'];
 
-      attrList = skuData['sku']['tree'];
-      if(attrList!=null && attrList.length>0){
-        for(var items in attrList){
-          items['checkVal'] = 0;
-          setState(() {
-            attrList = attrList;
+
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('goods_info_api', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+          delock(data['data']).then((unlock_data){
+            data['data'] = json.decode(unlock_data.toString());
+            setState(() {
+              _showLoading = false;
+              ///是否收藏
+              if(data['data']['issc'] == 1){
+                is_collection = true;
+              }else{
+                is_collection = false;
+              }
+              ///轮播图
+              swiperList = data['data']['goodsalbum'];
+              ///商品详情
+              goodsInfo = data['data'];
+              ///商品详情图
+              goods_detail_list = data['data']['goodsinfo'];
+            });
           });
-        }
-      }
-    });
+
+        });
+      });
+    }
+
   }
 
   @override

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_sub/service/data_service.dart';
+import 'package:flutter_sub/utils/secret.dart';
 import 'package:flutter_sub/utils/toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -83,16 +84,25 @@ class _OrderListPageState extends State<OrderListPage>
     ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {'uid': userid,'status':tabStatus,'page':1,'pageNum':8};
-    request('order_list_api', formData: formData).then((val) {
-      var data = json.decode(val.toString());
-      print(data);
-      if (data['code'] == 200) {
-        setState(() {
-          orderList = data['data'];
-          _showLoading = false;
+
+
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('order_list_api', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+          delock(data['data']).then((unlock_data){
+            data['data'] = json.decode(unlock_data.toString());
+            setState(() {
+              orderList = data['data'];
+              _showLoading = false;
+            });
+          });
+
         });
-      }
-    });
+      });
+    }
 
   }
 

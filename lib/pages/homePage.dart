@@ -6,7 +6,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_sub/pages/searchBarDelegate.dart';
 import 'package:flutter_sub/routers/application.dart';
 import 'package:flutter_sub/routers/routes.dart';
+import 'package:flutter_sub/utils/secret.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../service/data_service.dart';
 import '../widgets/staggeredGridView.dart';
 
@@ -33,43 +35,93 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _init();
-  }
-
-  ///初始化
-  void _init() {
     setState(() {
       _showLoading = true;
     });
-    var formData = {};
-    request('home_banner_api', formData: formData).then((val) async {
-      var data = json.decode(val.toString());
-      if (data['code'] == 200) {
-        bannerList = data['data']['WEB'];
-        request('home_category_api', formData: formData).then((val) async {
-          var data = json.decode(val.toString());
-          if(data['code'] == 200){
-            categoryList = data['data']['WEB'];
-            request('home_goods_api', formData: formData).then((val) async {
-              var data = json.decode(val.toString());
-              if(data['code'] == 200){
-                goodsList = data['data']['data'];
-                request('home_recommend_api', formData: formData).then((val) async {
-                  var data = json.decode(val.toString());
-                  if(data['code'] == 200){
-                    recommendList = data['data']['WEB'];
-                    setState(() {
-                      _showLoading = false;
-                    });
-                  }
-                });
-              }
-            });
-          }
-        });
-      }
-    });
+    _init();
+//    _init2();
+//    _init3();
+//    _init4();
+//    _init5();
+//    _init6();
   }
+
+  ///初始化
+  void _init() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var userid = prefs.getString('userId').toString();
+    var formData = {"uid": userid};
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('home_banner_api', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+          bannerList = data['data']['WEB'];
+          _init2();
+        });
+      });
+    }
+  }
+  void _init2() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var userid = prefs.getString('userId').toString();
+    var formData = {"uid": userid};
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('home_category_api', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+          categoryList = data['data']['WEB'];
+          _init3();
+        });
+      });
+    }
+  }
+
+  void _init3() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userId').toString();
+    var formData = {"uid": userid};
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('home_goods_api', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+          delock(data['data']).then((unlock_data){
+            data['data'] = json.decode(unlock_data.toString());
+            goodsList = data['data']['data'];
+            _init4();
+          });
+
+        });
+      });
+    }
+  }
+
+  void _init4() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userId').toString();
+    var formData = {"uid": userid};
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('home_recommend_api', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+          recommendList = data['data']['WEB'];
+          setState(() {
+            _showLoading = false;
+          });
+        });
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

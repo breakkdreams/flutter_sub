@@ -30,18 +30,28 @@ class _CategoryPagetate extends State<CategoryPage> with TickerProviderStateMixi
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     ///参数
-    var formData = {};
-    request('category_list_api', formData: formData).then((val) {
-      var data = json.decode(val.toString());
-      if (data['code'] == 200) {
-        setState(() {
-          list = data['data'];
-          childList = list[listIndex]['children'];
-          imageStr = list[listIndex]['catimg'];
-          _showLoading = false;
+    var userid = prefs.getString('userId').toString();
+    var formData = {"uid": userid};
+
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('category_list_api', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+          delock(data['data']).then((unlock_data){
+            data['data'] = json.decode(unlock_data.toString());
+            setState(() {
+              list = data['data'];
+              childList = list[listIndex]['children'];
+              imageStr = list[listIndex]['catimg'];
+              _showLoading = false;
+            });
+          });
+
         });
-      }
-    });
+      });
+    }
   }
 
   @override

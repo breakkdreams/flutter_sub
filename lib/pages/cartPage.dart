@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_sub/pages/settlementPage.dart';
 import 'package:flutter_sub/routers/application.dart';
+import 'package:flutter_sub/utils/secret.dart';
 import 'package:flutter_sub/utils/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../service/data_service.dart';
@@ -38,16 +39,27 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('userId');
     var formData = {'uid': userId};
-    request('cart_list_api', formData: formData).then((val) async {
-      var data = json.decode(val.toString());
-      print(data);
-      if (data['code'] == 200) {
-        cartList = data['data']['data']['carts'];
-        setState(() {
-          _showLoading = false;
+
+
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('cart_list_api', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+          delock(data['data']).then((unlock_data){
+            data['data'] = json.decode(unlock_data.toString());
+            setState(() {
+              cartList = data['data']['data']['carts'];
+              setState(() {
+                _showLoading = false;
+              });
+            });
+          });
+
         });
-      }
-    });
+      });
+    }
   }
 
   ///购物车数量加减

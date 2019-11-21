@@ -72,22 +72,28 @@ class _GoodsListPageState extends State<GoodsListPage> with TickerProviderStateM
       final String value = Utf8Decoder().convert(list);
       formData['sercon'] = value;
     }
-    request('goods_list_api', formData: formData).then((val) {
-      var data = json.decode(val.toString());
-      print(data);
-      if (data['code'] == 200) {
-        setState(() {
-          _showLoading = false;
-          if(is_refresh){
-            goodsList.addAll(data['data']['data']);
-          }else{
-            goodsList = data['data']['data'];
-          }
+
+
+    String secret_open = prefs.getString('secret_open');//1开 0关
+    if(secret_open == '1') { //要加密
+      lock(formData).then((params){
+        formData = {'data':params};
+        request('goods_list_api', formData: formData).then((val) {
+          var data = json.decode(val.toString());
+          delock(data['data']).then((unlock_data){
+            data['data'] = json.decode(unlock_data.toString());
+            setState(() {
+              _showLoading = false;
+              if(is_refresh){
+                goodsList.addAll(data['data']['data']);
+              }else{
+                goodsList = data['data']['data'];
+              }
+            });
+          });
         });
-      }else{
-        toast(data['message']);
-      }
-    });
+      });
+    }
   }
 
   ///刷新

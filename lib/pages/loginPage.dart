@@ -246,22 +246,13 @@ class _LoginPageState extends State<LoginPage> {
             print('============');
             print(data);
             print('============');
+            prefs.setString('userId', data['data']['uid']);
+            Provide.value<LoginProvide>(context).setUserId(data['data']['uid']);
+            Application.router.navigateTo(context,Routes.homePage,clearStack: true,);
           });
         });
       });
     }
-
-
-//    await request('loginPageContent', formData: formData).then((val) {
-//      var data = val;
-//
-////      toast(data['message']);
-////      if (data['code'] == 200) {
-////        prefs.setString('userId', data['data']['uid']);
-////        Provide.value<LoginProvide>(context).setUserId(data['data']['uid']);
-////        Application.router.navigateTo(context,Routes.homePage,clearStack: true,);
-////      }
-//    });
   }
 
 
