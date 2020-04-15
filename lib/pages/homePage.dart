@@ -18,18 +18,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  ///跳转
-  ///Application.router.navigateTo(context,Routes.detailsPage+"?id=99");
-
-  ///分类列表
   List categoryList = new List();
-  ///轮播图列表
   List bannerList = new List();
-  ///商品列表
   List goodsList = new List();
-  ///推荐列表
   List recommendList = new List();
-  ///显示加载动画
   bool _showLoading = false;
 
   @override
@@ -39,21 +31,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _showLoading = true;
     });
     _init();
-//    _init2();
-//    _init3();
-//    _init4();
-//    _init5();
-//    _init6();
   }
 
-  ///初始化
   void _init() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('home_banner_api', formData: formData).then((val) {
@@ -66,11 +51,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
   void _init2() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('home_category_api', formData: formData).then((val) {
@@ -86,8 +70,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('home_goods_api', formData: formData).then((val) {
@@ -107,8 +91,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('home_recommend_api', formData: formData).then((val) {
@@ -148,19 +132,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
         ) : ListView(
           children: <Widget>[
-            ///轮播图
             Container(
               child: _swiperBuilder(),
             ),
-            ///分类
             Container(
               child: _categoryBuilder(),
             ),
-            ///新品推荐
             Container(
               child: _recommendBuilder(),
             ),
-            ///商品
             Container(
               child: _goodsBuilder(),
             ),
@@ -168,7 +148,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ));
   }
 
-  ///轮播图
   Widget _swiperBuilder() {
     return Container(
         width: ScreenUtil().setWidth(750),
@@ -193,12 +172,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     ));
   }
 
-  ///分类
   Widget _categoryBuilder() {
     return Container(
       child: Wrap(
         alignment: WrapAlignment.start,
-        children: Boxs(), //要显示的子控件集合
+        children: Boxs(),
       ),
     );
   }
@@ -230,7 +208,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   });
 
-  ///推荐
   Widget _recommendBuilder(){
     return Container(
       child: Column(
@@ -324,8 +301,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-
-  ///猜你喜欢
   Widget _goodsBuilder() {
     return Container(
       margin: EdgeInsets.only(top: 20),

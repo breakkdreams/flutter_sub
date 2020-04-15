@@ -13,15 +13,12 @@ class SetPasswordPage extends StatefulWidget {
 }
 
 class _SetPasswordPageState extends State<SetPasswordPage> {
-
   TextEditingController _password_controller = new TextEditingController();
   TextEditingController _new_password_controller = new TextEditingController();
   TextEditingController _re_password_controller = new TextEditingController();
 
-  ///更新密码
   void _update_password() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid,"password":_password_controller.text,"new_password":_new_password_controller.text,"re_password":_re_password_controller.text};
     request('edit_password_api', formData: formData).then((val) {

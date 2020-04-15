@@ -16,9 +16,6 @@ class MessageDetailPage extends StatefulWidget {
 }
 
 class _MessageDetailPageState extends State<MessageDetailPage> with TickerProviderStateMixin {
-
-
-  ///显示加载动画
   bool _showLoading = false;
   Map messageInfo;
 
@@ -34,7 +31,6 @@ class _MessageDetailPageState extends State<MessageDetailPage> with TickerProvid
     });
     print(widget.message_id);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid,"id":widget.message_id};
     request('message_detail_api', formData: formData).then((val) {

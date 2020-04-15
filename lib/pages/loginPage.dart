@@ -1,4 +1,4 @@
-import 'dart:async';
+         import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -22,34 +22,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
-  // 响应空白处的焦点的Node
   FocusNode blankNode = FocusNode();
-  ///登录手机号
   TextEditingController _mobile_controller = new TextEditingController();
-  ///密码
   TextEditingController _password_controller = new TextEditingController();
-  ///昵称
   TextEditingController _name_controller = new TextEditingController();
-  ///验证码
   TextEditingController mController = new TextEditingController();
-  ///二次密码
   TextEditingController _check_password_controller = new TextEditingController();
-
-
-  ///密码可见
   bool hide_password = true;
-  ///登录false 注册true
   bool show_widget = false;
-
-  bool  isButtonEnable=true;//按钮状态  是否可点击
-  String buttonText='发送验证码';//初始文本
-  int count=60;//初始倒计时时间
-  Timer timer;//倒计时的计时器
-  //协议复选框
+  bool  isButtonEnable=true;
+  String buttonText='发送验证码';
+  int count=60;
+  Timer timer;
   bool valueb = false;
-
-  ///注册协议
   String agreementContent = '';
 
   void _initTimer(){
@@ -57,12 +42,12 @@ class _LoginPageState extends State<LoginPage> {
       count--;
       setState(() {
         if(count==0){
-          timer.cancel();             //倒计时结束取消定时器
-          isButtonEnable=true;        //按钮可点击
-          count=60;                   //重置时间
-          buttonText='发送验证码';     //重置按钮文本
+          timer.cancel();
+          isButtonEnable=true;
+          count=60;
+          buttonText='发送验证码';
         }else{
-          buttonText='重新发送($count)';  //更新文本内容
+          buttonText='重新发送($count)';
         }
       });
     });
@@ -70,13 +55,10 @@ class _LoginPageState extends State<LoginPage> {
 
   void _init () async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //判断jsapi_ticket有没有值
     var is_jsapi_ticket = prefs.getString('jsapi_ticket');
     if(is_jsapi_ticket !=null && is_jsapi_ticket.isNotEmpty){
-      //有值--判断过期时间
       String time_out = prefs.getString('ticket_time_out');
       if(time_out !=null && time_out.isNotEmpty){
-        //获取当前时间戳
         var now = new DateTime.now();
         var time_stamp = now.millisecondsSinceEpoch/1000;
         if(int.parse(time_out)<time_stamp){
@@ -91,9 +73,7 @@ class _LoginPageState extends State<LoginPage> {
       print('444444444444444444');
       _getaccessToken();
     }
-    ///加密开关(1是开 0是关)
     prefs.setString('secret_open', '1');
-
     var userid = prefs.getString('userId');
     if(userid !=null && userid.isNotEmpty){
       Application.router.navigateTo(context,Routes.homePage,clearStack: true,);
@@ -102,12 +82,10 @@ class _LoginPageState extends State<LoginPage> {
 
   void _getaccessToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///获取accessToken
     http_get('accessToken_api', formData: {'appid':'123456','appsecret':'000000'}).then((val) async {
       var data = json.decode(val.toString());
       if (data['code'] == 200) {
         String access_token = data['data']['access_token'];
-        ///获取jsapi_ticket
         http_get('jsapi_ticket_api', formData: {'jti':access_token}).then((val2) async {
           var data2 = json.decode(val2.toString());
           if (data2['code'] == 200) {
@@ -129,12 +107,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    timer?.cancel();      //销毁计时器
+    timer?.cancel();
     timer=null;
     super.dispose();
   }
 
-  //协议显示
   void showCupertinoAlertDialog() {
     showDialog(
         context: context,
@@ -175,16 +152,14 @@ class _LoginPageState extends State<LoginPage> {
         });
   }
 
-  ////////////////////////////////////////  接口  /////////////////////////////////////////
-  ///发送验证码
   void _send_message(){
     if((_mobile_controller.text).isEmpty && isButtonEnable){
       toast('请输入手机号');
       return;
     }
-    if(isButtonEnable){//当按钮可点击时
+    if(isButtonEnable){
       setState(() {
-        isButtonEnable=false;//按钮状态标记
+        isButtonEnable=false;
       });
       _initTimer();
       var formData = {'mobile': _mobile_controller.text};
@@ -197,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
   }
-  ///获取注册协议
+
   void _get_agreement(){
     request('agreementPageContent', formData: {}).then((val) async {
       var data = json.decode(val.toString());
@@ -206,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
       }
     });
   }
-  ///注册
+
   void _register_sure(){
     var formData = {
       'mobile': _mobile_controller.text,
@@ -227,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
       }
     });
   }
-  ///登录
+
   void _login_sure() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var formData = {
@@ -269,15 +244,12 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
         onTap: (){
-          // 点击空白页面关闭键盘
           FocusScope.of(context).requestFocus(blankNode);
         },
       )
     );
   }
 
-
-  ///登录组
   Widget _login(){
     return Offstage(
       offstage: show_widget,
@@ -380,8 +352,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
-  ///注册组
   Widget _register(){
     return Offstage(
       offstage: !show_widget,
@@ -445,10 +415,10 @@ class _LoginPageState extends State<LoginPage> {
                 Container(
                   width: 100,
                   child: FlatButton(
-                    disabledColor: Colors.grey.withOpacity(0.1),     //按钮禁用时的颜色
-                    disabledTextColor: Colors.white,                   //按钮禁用时的文本颜色
-                    textColor:isButtonEnable?Colors.white:Colors.black.withOpacity(0.2),                           //文本颜色
-                    color: isButtonEnable?Color.fromRGBO(16,167,142,1):Colors.grey.withOpacity(0.1),                          //按钮的颜色
+                    disabledColor: Colors.grey.withOpacity(0.1),
+                    disabledTextColor: Colors.white,
+                    textColor:isButtonEnable?Colors.white:Colors.black.withOpacity(0.2),
+                    color: isButtonEnable?Color.fromRGBO(16,167,142,1):Colors.grey.withOpacity(0.1),
                     splashColor: isButtonEnable?Colors.white.withOpacity(0.1):Colors.transparent,
                     shape: StadiumBorder(side: BorderSide.none),
                     onPressed: (){ setState(() {

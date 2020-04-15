@@ -15,8 +15,6 @@ class MessageListPage extends StatefulWidget {
 }
 
 class _MessageListPageState extends State<MessageListPage> with TickerProviderStateMixin {
-
-  ///显示加载动画
   bool _showLoading = false;
   List messageList;
 
@@ -31,7 +29,6 @@ class _MessageListPageState extends State<MessageListPage> with TickerProviderSt
       _showLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
     request('message_list_api', formData: formData).then((val) {
@@ -46,8 +43,6 @@ class _MessageListPageState extends State<MessageListPage> with TickerProviderSt
       });
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {

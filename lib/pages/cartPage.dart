@@ -19,7 +19,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
   List cartList = new List();
   bool allcheck = false;
   Map final_map = {"final_price":"0" , "final_counts":"0"};
-  ///显示加载动画
   bool _showLoading = false;
 
   @override
@@ -29,20 +28,16 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
       final_map["final_counts"] = "0";
       _showLoading = true;
     });
-    ///获取列表记录
     getCartList();
     super.initState();
   }
-
 
   getCartList() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('userId');
     var formData = {'uid': userId};
-
-
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('cart_list_api', formData: formData).then((val) {
@@ -62,7 +57,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     }
   }
 
-  ///购物车数量加减
   carOpera(cid,specid,nums) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('userId');
@@ -73,7 +67,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
   }
 
 
-  ///购物车删除
   carDeleted(cid) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('userId');
@@ -85,7 +78,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     });
   }
 
-  ///跳转到预下单
   _page_settlement() async {
     String cids = '';
     for(var item in cartList){
@@ -159,7 +151,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  ///获取商品列表UI
   Widget _CartItem(maps,findex){
     List list = maps['cartinfo'];
     return Container(
@@ -226,7 +217,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  ///购物车按钮
   Widget _CartBottom(){
     return Container(
       margin: EdgeInsets.all(5.0),
@@ -238,7 +228,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  //全选按钮
   Widget selectAllBtn() {
     return Container(
       child: Row(
@@ -264,7 +253,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  ///计算价格
   _calculation(){
     double final_price = 0.0;
     int final_counts = 0;
@@ -282,7 +270,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     });
   }
 
-  // 合计区域
   Widget allPriceArea() {
     return Container(
       width: ScreenUtil().setWidth(430),
@@ -314,7 +301,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  //多选按钮
   Widget _cartCheckBt(item,index,findex) {
     return Container(
       child: Checkbox(
@@ -331,7 +317,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  ///更改多选来修改全选按钮的状态
   _changeAllCheck(){
     int is_false = 0;
     for(var i = 0;i < cartList.length;i++){
@@ -351,7 +336,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     }
   }
 
-  //商品图片
   Widget _cartImage(item) {
     return Container(
       width: ScreenUtil().setWidth(150),
@@ -367,7 +351,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  //商品名称
   Widget _cartGoodsName(item) {
     return Container(
       width: ScreenUtil().setWidth(250),
@@ -385,7 +368,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  //商品价格
   Widget _cartPrice(item,findex,index) {
     return Container(
       width: ScreenUtil().setWidth(200),
@@ -396,7 +378,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  ///结算按钮
   Widget goButton() {
     String cartid = '';
     for(var i = 0;i < cartList.length;i++){
@@ -450,7 +431,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  // 减少按钮
   Widget _reduceBtn(item,findex,index) {
     return InkWell(
       onTap: (){
@@ -476,7 +456,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  //添加按钮
   Widget _addBtn(item,findex,index) {
     return InkWell(
       onTap: () {
@@ -498,7 +477,6 @@ class _CartPagetState extends State<CartPage> with TickerProviderStateMixin  {
     );
   }
 
-  //中间数量显示区域
   Widget _countArea(counts) {
     return Container(
       width: ScreenUtil().setWidth(70),

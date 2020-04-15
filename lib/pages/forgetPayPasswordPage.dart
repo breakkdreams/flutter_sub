@@ -18,45 +18,42 @@ class ForgetPayPasswordPage extends StatefulWidget {
 
 class _ForgetPayPasswordPageState extends State<ForgetPayPasswordPage> {
   String mobile = '';
-
-  ///验证码
   TextEditingController mController = new TextEditingController();
-  bool  isButtonEnable=true;//按钮状态  是否可点击
-  String buttonText='发送验证码';//初始文本
-  int count=60;//初始倒计时时间
-  Timer timer;//倒计时的计时器
+  bool  isButtonEnable=true;
+  String buttonText='发送验证码';
+  int count=60;
+  Timer timer;
 
   void _initTimer(){
     timer = new Timer.periodic(Duration(seconds: 1), (Timer timer) {
       count--;
       setState(() {
         if(count==0){
-          timer.cancel();             //倒计时结束取消定时器
-          isButtonEnable=true;        //按钮可点击
-          count=60;                   //重置时间
-          buttonText='发送验证码';     //重置按钮文本
+          timer.cancel();
+          isButtonEnable=true;
+          count=60;
+          buttonText='发送验证码';
         }else{
-          buttonText='重新发送($count)';  //更新文本内容
+          buttonText='重新发送($count)';
         }
       });
     });
   }
 
-  ///发送验证码
   void _send_message() async {
     if(mobile.isEmpty && isButtonEnable){
       toast('请输入手机号');
       return;
     }
-    if(isButtonEnable){//当按钮可点击时
+    if(isButtonEnable){
       setState(() {
-        isButtonEnable=false;//按钮状态标记
+        isButtonEnable=false;
       });
       _initTimer();
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String secret_open = prefs.getString('secret_open');//1开 0关
+      String secret_open = prefs.getString('secret_open');
       var formData = {'mobile': mobile};
-      if(secret_open == '1'){//要加密
+      if(secret_open == '1'){
         var lock_data = lock(formData);
         lock_data.then((params){
           request('sendMsg', formData: {'data':params}).then((val) {
@@ -70,7 +67,7 @@ class _ForgetPayPasswordPageState extends State<ForgetPayPasswordPage> {
             });
           });
         });
-      }else{//不用加密
+      }else{
         request('sendMsg', formData: formData).then((val) async {
           var data = json.decode(val.toString());
           if (data['code'] == 200) {
@@ -82,13 +79,11 @@ class _ForgetPayPasswordPageState extends State<ForgetPayPasswordPage> {
     }
   }
 
-  ///下一步
   void _update_password() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    ///参数
+    String secret_open = prefs.getString('secret_open');
     var formData = {"mobile": mobile,"mobile_code":mController.text,"type":1};
-    if(secret_open == '1'){//要加密
+    if(secret_open == '1'){
       var lock_data = lock(formData);
       lock_data.then((params){
         request('forget_pay_password_api', formData: {'data':params}).then((val) {
@@ -103,7 +98,7 @@ class _ForgetPayPasswordPageState extends State<ForgetPayPasswordPage> {
           });
         });
       });
-    }else{//不用加密
+    }else{
       request('forget_pay_password_api', formData: formData).then((val) {
         var data = json.decode(val.toString());
         if(data['code'] == 200){
@@ -122,14 +117,13 @@ class _ForgetPayPasswordPageState extends State<ForgetPayPasswordPage> {
 
   @override
   void dispose() {
-    timer?.cancel();      //销毁计时器
+    timer?.cancel();
     timer=null;
     super.dispose();
   }
 
   void _init() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
     request('userInfoPageContent', formData: formData).then((val) {
@@ -206,10 +200,10 @@ class _ForgetPayPasswordPageState extends State<ForgetPayPasswordPage> {
                   Container(
                     width: 100,
                     child: FlatButton(
-                      disabledColor: Colors.grey.withOpacity(0.1),     //按钮禁用时的颜色
-                      disabledTextColor: Colors.white,                   //按钮禁用时的文本颜色
-                      textColor:isButtonEnable?Colors.white:Colors.black.withOpacity(0.2),                           //文本颜色
-                      color: isButtonEnable?Colors.white.withOpacity(0):Colors.grey.withOpacity(0.1),                          //按钮的颜色
+                      disabledColor: Colors.grey.withOpacity(0.1),
+                      disabledTextColor: Colors.white,
+                      textColor:isButtonEnable?Colors.white:Colors.black.withOpacity(0.2),
+                      color: isButtonEnable?Colors.white.withOpacity(0):Colors.grey.withOpacity(0.1),
                       splashColor: isButtonEnable?Colors.white.withOpacity(0.1):Colors.transparent,
                       shape: StadiumBorder(side: BorderSide.none),
                       onPressed: (){ setState(() {

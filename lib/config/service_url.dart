@@ -1,4 +1,4 @@
-const baseUrl = 'http://tp.300c.cn/zy_137/subsystem20190906/public/';
+const baseUrl = 'http://js3.300c.cn/shop/public/';
 
 
 const servicePath={

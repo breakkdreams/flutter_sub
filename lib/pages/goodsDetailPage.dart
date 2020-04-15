@@ -31,22 +31,15 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
   final String goodsId;
 
   _GoodsDetailPageState(this.goodsId);
-
   List attrList = new List();
   List specList = new List();
-  Map checkedMap = new HashMap();//选中的属性
+  Map checkedMap = new HashMap();
   List swiperList= [];
   Map goodsInfo = {};
   bool is_collection = false;
   List goods_detail_list = new List();
-
-
   Map skuData = new Map();
-
-  ///数字
   int num = 1;
-
-  ///显示加载动画
   bool _showLoading = false;
 
   @override
@@ -61,13 +54,11 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
   }
 
   goodsSpec() async {
-    ///获取商品配置
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userId').toString();
     var formData = {"id":goodsId};
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('goods_spec_api', formData: formData).then((val) {
@@ -92,12 +83,11 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
   }
 
   addfooter() async {
-    ///添加足迹
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid,"goods_id":goodsId,"type":1};
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('footprint_api', formData: formData).then((val) {
@@ -110,13 +100,10 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
 
   _init() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid,"id":goodsId};
-
-
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('goods_info_api', formData: formData).then((val) {
@@ -125,17 +112,13 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
             data['data'] = json.decode(unlock_data.toString());
             setState(() {
               _showLoading = false;
-              ///是否收藏
               if(data['data']['issc'] == 1){
                 is_collection = true;
               }else{
                 is_collection = false;
               }
-              ///轮播图
               swiperList = data['data']['goodsalbum'];
-              ///商品详情
               goodsInfo = data['data'];
-              ///商品详情图
               goods_detail_list = data['data']['goodsinfo'];
             });
           });
@@ -189,7 +172,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
                   },
                 ),
               ),
-              ///评价
               Container(
                 padding: EdgeInsets.all(10),
                 color: Colors.white,
@@ -244,7 +226,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
               )
             ],
           ),
-          ///顶部返回按钮
           Positioned(
             top: MediaQueryData.fromWindow(window).padding.top,
             left: 20.0,
@@ -263,7 +244,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
               ),
             ),
           ),
-          ///底部ui
           Positioned(
             bottom: 0,
             child: Container(
@@ -427,9 +407,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
     });
   }
 
-  ///---------------------------- 各种点击方法sart--------------------------
-
-  //加入购物车
   _addCart() async {
     String sarr = '';
     for(var item in attrList){
@@ -438,9 +415,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
       }
       sarr = sarr + item['checkVal'];
     }
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {'uid': userid,'id':goodsId,'sarr':sarr,'num':num};
     request('add_cart_api', formData: formData).then((val) {
@@ -452,7 +427,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
     });
   }
 
-  //立即购买
   _buyNow() async {
     String sarr = '';
     for(var item in attrList){
@@ -461,9 +435,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
       }
       sarr = sarr + item['checkVal'];
     }
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {'uid': userid,'gid':goodsId,'specid':sarr,'num':num};
     request('buy_now_api', formData: formData).then((val) {
@@ -478,7 +450,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
     });
   }
 
-  //添加收藏
   _addCollection(goodsId){
 //    var formData = {'userid': loginProvide.user_id, 'type': 2,'id':goodsId};
 //    request('addCollectionPageContent', formData: formData).then((val) async {
@@ -491,7 +462,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
 //    });
   }
 
-  //添加足迹
   _addFootprint(goodsId,userid){
     var formData = {'userid': userid, 'type': 2,'id':goodsId};
     request('addFootprintPageContent', formData: formData).then((val) async {
@@ -501,9 +471,7 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
       }
     });
   }
-  ///---------------------------- 各种点击方法end--------------------------
 
-  ///按钮
   Widget btn(state) {
     return Container(
       width: 300,
@@ -533,7 +501,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
                   height: 30,
                   child: Icon(Icons.remove),
                 ),
-                //不写的话点击起来不流畅
                 onTap: () {
                   if (num <= 0) {
                     return;
@@ -618,7 +585,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
         );
       });
 
-  //获取选中的属性
   _attrCheck(indexs,item_index,id){
     attrList[indexs]['checkVal'] = id;
     String imgurl = attrList[indexs]['v'][item_index]['imgUrl'];
@@ -626,8 +592,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
       skuData['goods_info']['picture'] = imgurl;
     }
     attrList[indexs]['k_v']=id.toString();
-
-    ///属性选择完成
     List allSkuList = skuData['sku']['list'];
     if(allSkuList!=null && allSkuList.length>0){
       for(var items in allSkuList){
@@ -648,7 +612,6 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
     ///allSkuList['is_check'] == 0为中
     for(var items in allSkuList){
       if(items['is_check'] == 0){
-        ///库存
         skuData['sku']['stock_num'] = items['stock_num'];
         skuData['sku']['price'] = items['price'];
       }
@@ -656,13 +619,9 @@ class _GoodsDetailPageState extends State<GoodsDetailPage> with TickerProviderSt
   }
 }
 
-
-//轮播图
 class SwiperIndex extends StatelessWidget {
   final List swiperList;
-
   SwiperIndex({Key key, this.swiperList}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -671,11 +630,8 @@ class SwiperIndex extends StatelessWidget {
       width: ScreenUtil().setWidth(750),
       child: Swiper(
         itemCount: swiperList.length,
-        // 展示数量
         scrollDirection: Axis.horizontal,
-        // 方向 Axis.horizontal  Axis.vertical
         autoplay: false,
-        // 自动翻页
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
             onTap: () {},
@@ -691,12 +647,9 @@ class SwiperIndex extends StatelessWidget {
   }
 }
 
-//价格和商品名称
 class PriceAndGoodsName extends StatelessWidget {
   final Map goodsInfo;
-
   PriceAndGoodsName(this.goodsInfo);
-
   @override
   Widget build(BuildContext context) {
     return Container(

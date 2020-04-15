@@ -8,10 +8,8 @@ import 'package:flutter_sub/utils/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgetNextPasswordPage extends StatefulWidget {
-
   String mobile;
   String mobile_code;
-
   ForgetNextPasswordPage({this.mobile,this.mobile_code});
 
   @override
@@ -23,10 +21,8 @@ class _ForgetNextPasswordPageState extends State<ForgetNextPasswordPage> {
   TextEditingController _new_password_controller = new TextEditingController();
   TextEditingController _re_password_controller = new TextEditingController();
 
-  ///更新密码
   void _update_password() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var formData = {"mobile": widget.mobile,"mobile_code":widget.mobile_code,"new_password":_new_password_controller.text,"re_password":_re_password_controller.text,"type":2};
     request('forget_password_api', formData: formData).then((val) {
       var data = json.decode(val.toString());

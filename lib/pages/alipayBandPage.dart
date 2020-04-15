@@ -19,14 +19,11 @@ class _AlipayBandPageState extends State<AlipayBandPage> {
   TextEditingController account_controller = new TextEditingController();
   TextEditingController accountname_controller = new TextEditingController();
 
-  ///绑定账号
   void band_account() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String id = widget.alipay_id;
-    ///参数
     var uid = prefs.getString('userId').toString();
     if(id == null || id.isEmpty || id == '0'){
-      //添加
       var formData = {"tid":"1","uid":uid,"account":account_controller.text,"accountname":accountname_controller.text,"tphone":""};
       request('add_account_api', formData: formData).then((val) {
         var data = json.decode(val.toString());
@@ -36,7 +33,6 @@ class _AlipayBandPageState extends State<AlipayBandPage> {
         toast(data['message']);
       });
     }else{
-      //修改
       var formData = {"id": id,"account":account_controller.text,"accountname":accountname_controller.text};
       request('edit_account_api', formData: formData).then((val) {
         var data = json.decode(val.toString());

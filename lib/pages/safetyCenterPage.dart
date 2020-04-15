@@ -15,7 +15,6 @@ class SafetyCenterPage extends StatefulWidget {
 }
 
 class _SafetyCenterPageState extends State<SafetyCenterPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

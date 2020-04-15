@@ -1,4 +1,3 @@
-///用来传递数据的实体
 class SettlementModel {
   Map shops;
   String totalnum;

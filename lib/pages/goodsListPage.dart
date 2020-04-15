@@ -28,8 +28,6 @@ class GoodsListPage extends StatefulWidget {
 class _GoodsListPageState extends State<GoodsListPage> with TickerProviderStateMixin {
 
   var tabController;
-
-  ///显示加载动画
   bool _showLoading = false;
   List goodsList;
 
@@ -40,9 +38,9 @@ class _GoodsListPageState extends State<GoodsListPage> with TickerProviderStateM
       _showLoading = true;
     });
     this.tabController = new TabController(
-      vsync: this,        // 动画效果的异步处理
-      length: 4,        // tab 个数
-      initialIndex: 0   // 起始位置
+      vsync: this,
+      length: 4,
+      initialIndex: 0
     );
 
     this.tabController.addListener(() {
@@ -57,25 +55,21 @@ class _GoodsListPageState extends State<GoodsListPage> with TickerProviderStateM
   bool is_refresh = false;
 
   void _init() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid,"page":page,"paginate":paginate,"order":1};
     if(widget.catid !=null && widget.catid!=''){
       formData['catid'] = widget.catid;
     }if(widget.sercon !=null && widget.sercon!=''){
-
       var list = List<int>();
-      ///字符串解码
       jsonDecode(widget.sercon).forEach(list.add);
       final String value = Utf8Decoder().convert(list);
       formData['sercon'] = value;
     }
 
 
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('goods_list_api', formData: formData).then((val) {
@@ -96,7 +90,6 @@ class _GoodsListPageState extends State<GoodsListPage> with TickerProviderStateM
     }
   }
 
-  ///刷新
   _refresh_init(){
     setState(() {
       page = 1;
@@ -105,7 +98,6 @@ class _GoodsListPageState extends State<GoodsListPage> with TickerProviderStateM
     });
     _init();
   }
-  ///加载更多
   _get_more(){
     setState(() {
       page = page+1;
@@ -185,7 +177,6 @@ class _GoodsListPageState extends State<GoodsListPage> with TickerProviderStateM
     );
   }
 
-  ///商品列表
   Widget _goodsItem(goodsItem){
     return ListTile(
       contentPadding: EdgeInsets.all(20),

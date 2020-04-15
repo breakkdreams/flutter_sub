@@ -16,8 +16,7 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPagetate extends State<CategoryPage> with TickerProviderStateMixin  {
 
   List list = [];
-  var listIndex = 0; //索引
-  ///显示加载动画
+  var listIndex = 0;
   bool _showLoading = false;
 
   var childList;
@@ -29,12 +28,10 @@ class _CategoryPagetate extends State<CategoryPage> with TickerProviderStateMixi
     });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
-
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('category_list_api', formData: formData).then((val) {
@@ -123,7 +120,6 @@ class _CategoryPagetate extends State<CategoryPage> with TickerProviderStateMixi
     );
   }
 
-  //菜单的文字
   Widget _leftMenu(int index) {
     bool isClick = false;
     isClick = (index == listIndex) ? true : false;
@@ -181,8 +177,8 @@ class _CategoryPagetate extends State<CategoryPage> with TickerProviderStateMixi
   }
 
   Widget buildGrid(List formList) {
-    List<Widget> tiles = []; //先建一个数组用于存放循环生成的widget
-    Widget content; //单独一个widget组件，用于返回需要生成的内容widget
+    List<Widget> tiles = [];
+    Widget content;
     if(formList == null){
       return Center(
         child: Text('暂无数据'),
@@ -209,11 +205,8 @@ class _CategoryPagetate extends State<CategoryPage> with TickerProviderStateMixi
         GridView.builder(
           shrinkWrap: true,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //横轴元素个数
               crossAxisCount: 3,
-              //横轴间距
               crossAxisSpacing: 10.0,
-              //子组件宽高长度比例
               childAspectRatio: 0.8),
           itemBuilder: (context, index) {
             if (item['children'] != null) {
@@ -227,10 +220,8 @@ class _CategoryPagetate extends State<CategoryPage> with TickerProviderStateMixi
       ]));
     }
     content = new Column(
-        children: tiles //重点在这里，因为用编辑器写Column生成的children后面会跟一个<Widget>[]，
-      //此时如果我们直接把生成的tiles放在<Widget>[]中是会报一个类型不匹配的错误，把<Widget>[]删了就可以了
+        children: tiles
     );
-
     return content;
   }
 

@@ -15,10 +15,7 @@ class MyWalletPage extends StatefulWidget {
 }
 
 class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMixin {
-
-  ///用户信息
   Map userInfo;
-  ///显示加载动画
   bool _showLoading = false;
 
   @override
@@ -32,7 +29,6 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
       _showLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {'uid': userid};
     request('userInfoPageContent', formData: formData).then((val) {
@@ -95,7 +91,6 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
     );
   }
 
-  ///最上边
   Widget _top_widget(){
     return Container(
       decoration: new BoxDecoration(
@@ -177,13 +172,12 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
     );
   }
 
-  ///中间
   Widget _middle_widget(){
     return Container(
       child: Wrap(
-        spacing: 0, //主轴上子控件的间距
-        runSpacing: 0, //交叉轴上子控件之间的间距
-        children: Boxs(), //要显示的子控件集合
+        spacing: 0,
+        runSpacing: 0,
+        children: Boxs(),
       ),
     );
   }
@@ -214,14 +208,12 @@ class _MyWalletPageState extends State<MyWalletPage> with TickerProviderStateMix
     );
   });
 
-
-  ///下边
   Widget _bottom_widget(){
     return Container(
       child: Wrap(
-        spacing: 0, //主轴上子控件的间距
-        runSpacing: 0, //交叉轴上子控件之间的间距
-        children: bottom_boxs(), //要显示的子控件集合
+        spacing: 0,
+        runSpacing: 0,
+        children: bottom_boxs(),
       ),
     );
   }

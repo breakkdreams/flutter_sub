@@ -7,7 +7,6 @@ class SearchSuggestPage extends StatefulWidget {
 
 class _SearchSuggestPageState extends State<SearchSuggestPage> {
   bool _isHideSearchFind = false;
-
   List searchRecordTexts;
 
   @override
@@ -16,7 +15,6 @@ class _SearchSuggestPageState extends State<SearchSuggestPage> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
           color: Colors.white),
-//      color: Colors.red,
       child: Column(
         children: <Widget>[
           SizedBox(
@@ -87,9 +85,7 @@ class _SearchSuggestPageState extends State<SearchSuggestPage> {
                 child: GridView.count(
                   padding: const EdgeInsets.only(left: 12),
                   crossAxisCount: 2,
-                  // 左右间隔
                   crossAxisSpacing: 8,
-                  // 上下间隔
                   mainAxisSpacing: 8,
                   reverse: false,
                   scrollDirection: Axis.vertical,

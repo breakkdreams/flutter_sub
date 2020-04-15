@@ -37,22 +37,18 @@ class _HomesState extends State<Homes> {
     BottomNavigationBarItem(
       icon: Icon(Icons.home),
       title: Text('首页'),
-      //backgroundColor: Colors.orange
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.category),
       title: Text('分类'),
-      //backgroundColor: Colors.orange
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.add_shopping_cart),
       title: Text('购物车'),
-      //backgroundColor: Colors.orange
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.account_circle),
       title: Text('我的'),
-      //backgroundColor: Colors.orange
     ),
   ];
 

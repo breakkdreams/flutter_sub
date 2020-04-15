@@ -7,7 +7,6 @@ import 'package:rsa_plugin/rsa_plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_rsa/simple_rsa.dart';
 
-///加密
 Future<String> lock(param) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var rsa_public_key = '-----BEGIN PUBLIC KEY-----\n' +
@@ -18,31 +17,18 @@ Future<String> lock(param) async {
       '-----END PUBLIC KEY-----';
   var content = utf8.encode(rsa_public_key);
   var digest = base64Encode(content);
-
   final parser = RSAKeyParser();
-
-  //获取当前时间时间戳
   var timestamp = DateTime.now().millisecondsSinceEpoch;
-  //生成随机数
   String alphabet =
       'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890';
   int strlenght = 30;
-
-  /// 生成的字符串固定长度
   String noncestr = '';
   for (var i = 0; i < strlenght; i++) {
     noncestr = noncestr + alphabet[Random().nextInt(alphabet.length)];
   }
-
-  /**
-   * 生成签名
-   * @param  {[type]} data [json数组]
-   * @return {[type]}      [description]
-   */
   String appid = '123456';
   var jsapi_ticket = prefs.get('jsapi_ticket');
   var paramString = '';
-  //排序
   var st = new SplayTreeMap<String, Object>();
   var data = {
     "appid": appid,
@@ -52,7 +38,6 @@ Future<String> lock(param) async {
   };
   st.addAll(data);
   st.addAll(param);
-
   st.forEach((key, value) {
     paramString += key + '=' + value.toString() + '&';
   });
@@ -65,7 +50,6 @@ Future<String> lock(param) async {
   return encryptedText;
 }
 
-///解密
 Future<String> delock(param) async {
   var encryptedText = RsaPlugin.platformVersion(param);
   return encryptedText;

@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchGoodsPage extends StatefulWidget {
   final String keywords;
-
   const SearchGoodsPage({Key key, this.keywords}) : super(key: key);
 
   @override
@@ -22,18 +21,13 @@ class SearchGoodsPage extends StatefulWidget {
 class _SearchGoodsPageState extends State<SearchGoodsPage> with TickerProviderStateMixin {
   List<String> recomendWords = [];
   TextEditingController _keywordsTextEditingController = TextEditingController();
-
-  ///显示加载动画
   bool _showLoading = false;
   List historyList = new List();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     _keywordsTextEditingController.text = widget.keywords;
-
     if (widget.keywords != null) {
       seachTxtChanged(widget.keywords);
     }
@@ -45,7 +39,6 @@ class _SearchGoodsPageState extends State<SearchGoodsPage> with TickerProviderSt
       _showLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
     request('search_history_api', formData: formData).then((val) async {
@@ -134,7 +127,6 @@ class _SearchGoodsPageState extends State<SearchGoodsPage> with TickerProviderSt
                 padding: EdgeInsets.all(20),
                 width: ScreenUtil().setHeight(750),
                 decoration: new BoxDecoration(
-                  //设置四周圆角 角度
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(4.0),topRight: Radius.circular(4.0)),
                 ),
                 child: Row(
@@ -158,7 +150,6 @@ class _SearchGoodsPageState extends State<SearchGoodsPage> with TickerProviderSt
               ) : Container(
                 width: ScreenUtil().setHeight(750),
                 decoration: new BoxDecoration(
-                  //设置四周圆角 角度
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(4.0),topRight: Radius.circular(4.0)),
                 ),
                 child: _history(),
@@ -168,7 +159,6 @@ class _SearchGoodsPageState extends State<SearchGoodsPage> with TickerProviderSt
     );
   }
 
-  ///历史记录
   Widget _history(){
     return Container(
       padding: EdgeInsets.only(left: 20,right: 20),
@@ -176,9 +166,7 @@ class _SearchGoodsPageState extends State<SearchGoodsPage> with TickerProviderSt
         padding: EdgeInsets.all(8),
         child: Wrap(
           alignment: WrapAlignment.start,
-          //水平距离
           spacing: 10.0,
-          //垂直距离
           runSpacing: 8.0,
           children: Boxs(),
         ),

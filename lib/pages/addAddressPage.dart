@@ -27,7 +27,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
    void _add_Address() async {
      SharedPreferences prefs = await SharedPreferences.getInstance();
-     ///参数
      int is_check = 2;
      if(check){
        is_check = 1;
@@ -151,7 +150,7 @@ import 'package:shared_preferences/shared_preferences.dart';
                    ),),
                    trailing: Switch(
                      value: this.check,
-                     activeColor: Colors.blue,     // 激活时原点颜色
+                     activeColor: Colors.blue,
                      onChanged: (bool val) {
                        this.setState(() {
                          this.check = !this.check;

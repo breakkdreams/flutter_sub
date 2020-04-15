@@ -18,9 +18,7 @@ class MyAccountPage extends StatefulWidget {
 
 class _MyAccountPageState extends State<MyAccountPage>
     with TickerProviderStateMixin {
-  ///显示加载动画
   bool _showLoading = false;
-
   Map infoData;
 
   @override
@@ -34,7 +32,6 @@ class _MyAccountPageState extends State<MyAccountPage>
       _showLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {'uid': userid};
     request('my_account_api', formData: formData).then((val) {
@@ -52,12 +49,10 @@ class _MyAccountPageState extends State<MyAccountPage>
 
   void _set_default(id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String secret_open = prefs.getString('secret_open'); //1开 0关
-    ///参数
+    String secret_open = prefs.getString('secret_open');
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid,"id":id};
     if (secret_open == '1') {
-      //要加密
       var lock_data = lock(formData);
       lock_data.then((params) {
         request('set_default_bank_api', formData: {'data': params}).then((val) {
@@ -73,7 +68,6 @@ class _MyAccountPageState extends State<MyAccountPage>
         });
       });
     } else {
-      //不用加密
       request('set_default_bank_api', formData: formData).then((val) {
         var data = json.decode(val.toString());
         if (data['code'] == 200) {
@@ -86,12 +80,10 @@ class _MyAccountPageState extends State<MyAccountPage>
 
   void _deleted_account(id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String secret_open = prefs.getString('secret_open'); //1开 0关
-    ///参数
+    String secret_open = prefs.getString('secret_open');
     var userid = prefs.getString('userId').toString();
     var formData = {"id":id};
     if (secret_open == '1') {
-      //要加密
       var lock_data = lock(formData);
       lock_data.then((params) {
         request('deleted_account_api', formData: {'data': params}).then((val) {
@@ -107,7 +99,6 @@ class _MyAccountPageState extends State<MyAccountPage>
         });
       });
     } else {
-      //不用加密
       request('deleted_account_api', formData: formData).then((val) {
         var data = json.decode(val.toString());
         if (data['code'] == 200) {
@@ -233,9 +224,9 @@ class _MyAccountPageState extends State<MyAccountPage>
         itemBuilder: (BuildContext context, int index) {
           return Card(
             color: Color.fromRGBO(254, 105, 106, 1),
-            elevation: 8.0, //设置阴影
+            elevation: 8.0,
             shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(14.0))), //设置圆角
+                borderRadius: BorderRadius.all(Radius.circular(14.0))),
             child: Container(
               child: Column(
                 children: <Widget>[

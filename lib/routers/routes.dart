@@ -31,9 +31,7 @@ class Routes { //配置类
   static String orderListPage = '/orderList'; //订单列表
 
 
-  //静态方法
-  static void configureRoutes(Router router){//路由配置
-    //找不到路由
+  static void configureRoutes(Router router){
     router.notFoundHandler = new Handler(
         // ignore: missing_return
         handlerFunc: (BuildContext context,Map<String,List<String>> params){

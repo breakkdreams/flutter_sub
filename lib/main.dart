@@ -22,17 +22,12 @@ void main(){
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //-------------------主要代码start
-    final router = Router(); //路由初始化
+    final router = Router();
     Routes.configureRoutes(router);
     Application.router = router;
-    //-------------------主要代码end
-
     return MaterialApp(
       title: 'Flutter Demo',
-      //----------------主要代码start
-      onGenerateRoute: Application.router.generator, //路由静态化
-      //----------------主要代码end
+      onGenerateRoute: Application.router.generator,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

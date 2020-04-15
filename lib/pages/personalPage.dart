@@ -19,39 +19,30 @@ class PersonalPage extends StatefulWidget {
 
 class _PersonalPageState extends State<PersonalPage>
     with TickerProviderStateMixin {
-  ///显示加载动画
   bool _showLoading = false;
-
-  ///用户信息
   Map userInfo;
-  ///商品收藏和浏览足迹
   Map grInfo;
-  ///我的工具
   List toolsList;
 
   @override
   void initState() {
     _init();
-
-
     super.initState();
   }
 
   void _init() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _showLoading = true;
     });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('userInfoPageContent', formData: formData).then((val) {
           var data = json.decode(val.toString());
-
           delock(data['data']).then((unlock_data){
             data['data'] = json.decode(unlock_data.toString());
             setState(() {
@@ -70,11 +61,10 @@ class _PersonalPageState extends State<PersonalPage>
       _showLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('grPageContent', formData: formData).then((val) {
@@ -86,7 +76,6 @@ class _PersonalPageState extends State<PersonalPage>
             });
             _init3();
           });
-
         });
       });
     }
@@ -97,11 +86,10 @@ class _PersonalPageState extends State<PersonalPage>
       _showLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('myToolsPageContent', formData: formData).then((val) {
@@ -110,7 +98,6 @@ class _PersonalPageState extends State<PersonalPage>
             toolsList = data['data'];
             _showLoading = false;
           });
-
         });
       });
     }
@@ -152,7 +139,6 @@ class _PersonalPageState extends State<PersonalPage>
     );
   }
 
-  ///用户头像区
   Widget _head_area() {
     return GestureDetector(
       onTap: () {},
@@ -289,7 +275,6 @@ class _PersonalPageState extends State<PersonalPage>
     );
   }
 
-  ///订单区
   Widget _order_area(){
     return  Container(
       margin: EdgeInsets.only(
@@ -298,10 +283,8 @@ class _PersonalPageState extends State<PersonalPage>
       height: ScreenUtil().setHeight(ScreenUtil().setHeight(260)),
       padding: EdgeInsets.only(top: 30),
       decoration: new BoxDecoration(
-        //设置子控件背后的装饰
         color: Colors.white,
         borderRadius: new BorderRadius.all(new Radius.circular(20.0)),
-        // 生成俩层阴影，一层绿，一层黄， 阴影位置由offset决定,阴影模糊层度由blurRadius大小决定（大就更透明更扩散），阴影模糊大小由spreadRadius决定
         boxShadow: [
           BoxShadow(
               color: Color.fromRGBO(220, 220, 220, 0.7),
@@ -401,17 +384,14 @@ class _PersonalPageState extends State<PersonalPage>
     );
   }
 
-  ///我的工具
   Widget _my_tool(){
     return Container(
       margin: EdgeInsets.only(left: ScreenUtil().setWidth(38), right: ScreenUtil().setWidth(38),top: 30,bottom: 50),
       width: ScreenUtil().setWidth(ScreenUtil().setHeight(674)),
       padding: EdgeInsets.only(top: 20),
       decoration: new BoxDecoration(
-        //设置子控件背后的装饰
         color: Colors.white,
         borderRadius: new BorderRadius.all(new Radius.circular(20.0)),
-        // 生成俩层阴影，一层绿，一层黄， 阴影位置由offset决定,阴影模糊层度由blurRadius大小决定（大就更透明更扩散），阴影模糊大小由spreadRadius决定
         boxShadow: [
           BoxShadow(
               color: Color.fromRGBO(220, 220, 220, 0.7),
@@ -433,9 +413,9 @@ class _PersonalPageState extends State<PersonalPage>
           Container(
             margin: EdgeInsets.only(top: 20),
             child: Wrap(
-              spacing: 2, //主轴上子控件的间距
-              runSpacing: 5, //交叉轴上子控件之间的间距
-              children: Boxs(), //要显示的子控件集合
+              spacing: 2,
+              runSpacing: 5,
+              children: Boxs(),
             ),
           ),
         ],
@@ -476,6 +456,4 @@ class _PersonalPageState extends State<PersonalPage>
       )
     );
   });
-
-
 }

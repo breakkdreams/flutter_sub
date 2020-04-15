@@ -17,8 +17,6 @@ class AddressListPage extends StatefulWidget {
 }
 
 class _AddressListPageState extends State<AddressListPage> with TickerProviderStateMixin {
-
-  ///显示加载动画
   bool _showLoading = false;
   List addressList = new List();
 
@@ -33,7 +31,6 @@ class _AddressListPageState extends State<AddressListPage> with TickerProviderSt
       _showLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {"uid": userid};
     request('address_list_api', formData: formData).then((val) {

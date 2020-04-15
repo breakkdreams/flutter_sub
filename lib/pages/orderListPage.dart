@@ -27,8 +27,6 @@ class _OrderListPageState extends State<OrderListPage>
   List<TabTitle> tabList;
   int tabStatus = 1;
   List orderList;
-
-  ///显示加载动画
   bool _showLoading = false;
 
   @override
@@ -47,7 +45,6 @@ class _OrderListPageState extends State<OrderListPage>
       vsync: this,
       length: tabList.length,
     );
-    //添加监听
     mController.addListener(() {
       var index = mController.index;
       mController.animateTo(index);
@@ -58,15 +55,12 @@ class _OrderListPageState extends State<OrderListPage>
     });
   }
 
-  // 监听返回
   Future<bool> _requestPop() {
-    //跳转并关闭当前页面
     Navigator.pushAndRemoveUntil(
       context,
       new MaterialPageRoute(builder: (context) => new Index(cindex: 3)),
           (route) => route == null,
     );
-
     return new Future.value(false);
   }
 
@@ -81,13 +75,10 @@ class _OrderListPageState extends State<OrderListPage>
       _showLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {'uid': userid,'status':tabStatus,'page':1,'pageNum':8};
-
-
-    String secret_open = prefs.getString('secret_open');//1开 0关
-    if(secret_open == '1') { //要加密
+    String secret_open = prefs.getString('secret_open');
+    if(secret_open == '1') {
       lock(formData).then((params){
         formData = {'data':params};
         request('order_list_api', formData: formData).then((val) {
@@ -103,12 +94,10 @@ class _OrderListPageState extends State<OrderListPage>
         });
       });
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
       onWillPop: _requestPop,
       child: Scaffold(
@@ -126,7 +115,6 @@ class _OrderListPageState extends State<OrderListPage>
                     height: 40.0,
                     child: TabBar(
                       isScrollable: false,
-                      //是否可以滚动
                       controller: mController,
                       labelColor: Colors.black,
                       unselectedLabelColor: Color(0xff666666),
@@ -182,7 +170,6 @@ class _OrderListPageState extends State<OrderListPage>
 
   Widget orderItem(orderdetail, status, findex) {
     List goodsList = orderdetail['shop'];
-
     String status_str = '';
     switch (orderdetail['status'].toString()) {
       case "1":
@@ -197,24 +184,13 @@ class _OrderListPageState extends State<OrderListPage>
       case "4":
         status_str = "待评价";
         break;
-//      case "5":
-//        status_str = "已完成";
-//        break;
-//      case "6":
-//        status_str = "已取消";
-//        break;
-//      case "10":
-//        status_str = "售后";
-//        break;
       default:
         status_str = "";
         break;
     }
 
-    ///取消订单接口
     _cancelOrder() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      ///参数
       var userid = prefs.getString('userId').toString();
       var formData = {'userid': userid, 'id': orderdetail['id']};
       request('cancelOrderPageContent', formData: formData).then((val) async {
@@ -225,10 +201,8 @@ class _OrderListPageState extends State<OrderListPage>
       });
     }
 
-    ///确认收货接口
     _sureOrder() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      ///参数
       var userid = prefs.getString('userId').toString();
       var formData = {'userid': userid, 'id': orderdetail['id']};
       request('sureOrderPageContent', formData: formData).then((val) async {
@@ -354,7 +328,7 @@ class _OrderListPageState extends State<OrderListPage>
                 onPressed: () {
                   showDialog(
                     context: context,
-                    barrierDismissible: true, // user must tap button!
+                    barrierDismissible: true,
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('是否确认取消订单'),
@@ -373,7 +347,6 @@ class _OrderListPageState extends State<OrderListPage>
                             },
                           ),
                         ],
-                        // 设置成 圆角
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                       );
@@ -382,7 +355,6 @@ class _OrderListPageState extends State<OrderListPage>
                 },
                 color: Colors.blue,
                 textColor: Colors.white,
-                //触摸按钮时，类似水波纹扩散的颜色
                 splashColor: Colors.orange,
                 shape: RoundedRectangleBorder(
                     side: BorderSide.none,
@@ -399,7 +371,7 @@ class _OrderListPageState extends State<OrderListPage>
                 onPressed: () {
                   showDialog(
                     context: context,
-                    barrierDismissible: true, // user must tap button!
+                    barrierDismissible: true,
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('是否确认确认收货'),
@@ -418,7 +390,6 @@ class _OrderListPageState extends State<OrderListPage>
                             },
                           ),
                         ],
-                        // 设置成 圆角
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                       );
@@ -427,7 +398,6 @@ class _OrderListPageState extends State<OrderListPage>
                 },
                 color: Colors.blue,
                 textColor: Colors.white,
-                //触摸按钮时，类似水波纹扩散的颜色
                 splashColor: Colors.deepPurpleAccent,
                 shape: RoundedRectangleBorder(
                     side: BorderSide.none,

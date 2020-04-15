@@ -17,10 +17,8 @@ class _BankBandPageState extends State<BankBandPage> {
   TextEditingController accountname_controller = new TextEditingController();
   TextEditingController tphone_controller = new TextEditingController();
 
-  ///绑定账号
   void band_account() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {'tid':'3','uid':userid,'account':account_controller.text,'accountname':accountname_controller.text,'tphone':tphone_controller.text};
     request('add_account_api', formData: formData).then((val) {

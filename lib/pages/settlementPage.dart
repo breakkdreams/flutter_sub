@@ -13,24 +13,19 @@ import '../pages/address_page.dart';
 
 class SettlementPage extends StatefulWidget {
   Map settlementInfo;
-  int is_car;//1.购物车
+  int is_car;
   SettlementPage({this.settlementInfo,this.is_car});
-
   _SettlementPageState createState() => _SettlementPageState();
 }
 
 class _SettlementPageState extends State<SettlementPage> with TickerProviderStateMixin {
   TextEditingController _message_controller = new TextEditingController();
   int pay_way = 4;
-
   List shopList;
   Map defaultAddress;
   bool vistable = true;
-
   String totalnum = '0';
   String totalprice = '0';
-
-  ///显示加载动画
   bool _showLoading = false;
 
   @override
@@ -44,7 +39,6 @@ class _SettlementPageState extends State<SettlementPage> with TickerProviderStat
 
   getSettleInfo() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var userid = prefs.getString('userId').toString();
     var formData = {'uid': userid};
     request('default_address_api', formData: formData).then((val) {
@@ -154,7 +148,6 @@ class _SettlementPageState extends State<SettlementPage> with TickerProviderStat
                     ],
                   ),
                 ),
-                ///留言
                 Container(
                   padding: EdgeInsets.all(10),
                   margin: EdgeInsets.only(left: 10,right: 10),
@@ -169,7 +162,6 @@ class _SettlementPageState extends State<SettlementPage> with TickerProviderStat
                     decoration: InputDecoration.collapsed(hintText: "请输入留言"),
                   ),
                 ),
-                ///支付方式
                 Container(
                   margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(100)),
                   color: Colors.white,
@@ -271,16 +263,13 @@ class _SettlementPageState extends State<SettlementPage> with TickerProviderStat
         ),
       ),
     );
-
   }
 
-  ///生成订单
   make_order() async {
     var formData;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-//    ///参数
     var userid = prefs.getString('userId').toString();
-    if(widget.is_car == 1){//立即购买
+    if(widget.is_car == 1){
       String cids = '';
       for(var item in shopList){
         List itemList = item['cartinfo'];
@@ -321,8 +310,6 @@ class _SettlementPageState extends State<SettlementPage> with TickerProviderStat
           var second_data = json.decode(second_val.toString());
           if (second_data['code'] == 200) {
             String out_trade_no = second_data['data'];
-
-            ///余额支付
             if(pay_way == 4){
               TextEditingController _textEditingController = new TextEditingController();
               showCupertinoDialog(
@@ -373,15 +360,9 @@ class _SettlementPageState extends State<SettlementPage> with TickerProviderStat
                     );
                   });
             }else if(pay_way == 2){
-              ///微信支付
               toast('下单成功,暂未开发微信支付');
-              ///跳转
-
             }else if(pay_way == 1){
-              ///支付宝支付
               toast('下单成功,暂未开发支付宝支付');
-              ///跳转
-
             }
           }
         });
@@ -481,7 +462,6 @@ class _SettlementPageState extends State<SettlementPage> with TickerProviderStat
             ),
           ),
         ),
-//        Divider(),
       ],
     );
   }

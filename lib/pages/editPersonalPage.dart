@@ -19,19 +19,11 @@ class EditPersonalPage extends StatefulWidget {
 
 class _EditPersonalPageState extends State<EditPersonalPage> with TickerProviderStateMixin {
 
-  ///显示加载动画
   bool _showLoading = false;
-  ///用户信息
   Map userInfo;
-
-  ///昵称
   TextEditingController _nickNameController = TextEditingController();
-
   File _image;
 
-  /*
-  * 通过图片路径将图片转换成Base64字符串
-  */
   static Future image2Base64(String path) async {
     File file = new File(path);
     List<int> imageBytes = await file.readAsBytes();
@@ -41,7 +33,6 @@ class _EditPersonalPageState extends State<EditPersonalPage> with TickerProvider
 
   Future getImage(type) async {
     var image;
-    //相册
     if(type == 1){
       image = await ImagePicker.pickImage(source: ImageSource.gallery);
     }else{
@@ -50,9 +41,7 @@ class _EditPersonalPageState extends State<EditPersonalPage> with TickerProvider
     _upLoadImage(image);
   }
 
-  ///上传图片
   _upLoadImage(File image) async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userId').toString();
     String path = image.path;
@@ -65,16 +54,13 @@ class _EditPersonalPageState extends State<EditPersonalPage> with TickerProvider
       });
     });
   }
-  
-  ///退出登录
+
   _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('userId');
     Application.router.navigateTo(context,Routes.loginPage,clearStack: true,);
   }
 
-
-  //修改用户信息
   _updateUserInfo(nickname) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userId').toString();

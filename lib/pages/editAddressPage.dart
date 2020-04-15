@@ -28,10 +28,7 @@ import 'package:shared_preferences/shared_preferences.dart';
    String area = '';
    String old_area = '';
    bool check = false;
-
-   ///显示加载动画
    bool _showLoading = false;
-   ///地址信息
    Map addressInfo;
 
 
@@ -46,7 +43,6 @@ import 'package:shared_preferences/shared_preferences.dart';
       _showLoading = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ///参数
     var formData = {"id": widget.address_id};
     request('address_detail_api', formData: formData).then((val) {
       var data = json.decode(val.toString());
@@ -73,7 +69,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
    void _edit_Address() async {
      SharedPreferences prefs = await SharedPreferences.getInstance();
-     ///参数
      int is_check = 2;
      if(check){
        is_check = 1;
@@ -96,7 +91,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
    void _deleted_Address() async {
      SharedPreferences prefs = await SharedPreferences.getInstance();
-     ///参数
      var formData = {"id": widget.address_id};
      request('address_deleted_api', formData: formData).then((val) {
        var data = json.decode(val.toString());
@@ -221,7 +215,7 @@ import 'package:shared_preferences/shared_preferences.dart';
                    ),),
                    trailing: Switch(
                      value: this.check,
-                     activeColor: Colors.blue,     // 激活时原点颜色
+                     activeColor: Colors.blue,
                      onChanged: (bool val) {
                        this.setState(() {
                          this.check = !this.check;
